@@ -1,0 +1,1596 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ФЗ-243 · Разбор федерального закона об ИИ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,800;9..144,900&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EDF0F5;
+  --paper:#FBFCFE;
+  --ink:#0B1220;
+  --ink-2:#3A4356;
+  --ink-3:#6E7A8F;
+  --line:#D5DBE5;
+  --line-2:#E8ECF2;
+  --indigo:#1E3A8A;
+  --indigo-2:#312E81;
+  --emerald:#047857;
+  --amber:#B45309;
+  --crimson:#B91C1C;
+  --violet:#6D28D9;
+  --shadow:0 24px 70px rgba(20,30,50,.10), 0 6px 16px rgba(20,30,50,.04);
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Inter',system-ui,-apple-system,sans-serif;
+  font-size:16px;
+  background:var(--bg);
+  color:var(--ink);
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  font-feature-settings:"cv02","cv03","cv11";
+}
+
+/* ============ TOOLBAR ============ */
+.toolbar{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 32px;
+  background:rgba(237,240,245,.92);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--line-2);
+}
+.toolbar__brand{
+  font-family:'JetBrains Mono',monospace;
+  font-weight:600;font-size:13px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--ink-2);
+}
+.toolbar__brand span{color:var(--indigo)}
+.toolbar__actions{display:flex;gap:12px}
+.btn{
+  font-family:'Inter',sans-serif;font-weight:700;font-size:14px;
+  padding:12px 22px;border-radius:100px;border:1px solid var(--ink);
+  background:var(--ink);color:var(--paper);cursor:pointer;
+  display:inline-flex;align-items:center;gap:10px;
+  transition:all .25s ease;
+}
+.btn:hover{background:var(--indigo);border-color:var(--indigo);transform:translateY(-1px)}
+.btn:active{transform:translateY(0)}
+.btn:disabled{opacity:.6;cursor:wait}
+.btn--ghost{background:transparent;color:var(--ink)}
+.btn--ghost:hover{background:var(--ink);color:var(--paper)}
+.btn svg{width:16px;height:16px;flex-shrink:0}
+
+/* ============ DOCUMENT ============ */
+.document{
+  max-width:210mm;
+  margin:0 auto;
+  padding:100px 0 140px;
+  display:flex;flex-direction:column;gap:44px;
+}
+.page{
+  width:210mm;
+  height:297mm;
+  box-sizing:border-box;
+  background:var(--paper);
+  position:relative;
+  overflow:hidden;
+  box-shadow:var(--shadow);
+  padding:16mm 14mm 18mm;
+  display:flex;
+  flex-direction:column;
+  page-break-after:always;
+  break-after:page;
+  page-break-inside:avoid;
+  break-inside:avoid;
+}
+
+/* ============ PAGE CHROME ============ */
+.page__num{
+  position:absolute;top:8mm;right:14mm;
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;letter-spacing:.22em;
+  color:var(--ink-3);font-weight:500;
+}
+.page__mark{
+  position:absolute;top:8mm;left:14mm;
+  display:flex;align-items:center;gap:10px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:9.5px;letter-spacing:.26em;text-transform:uppercase;
+  color:var(--ink-3);font-weight:500;
+}
+.page__mark::before{
+  content:"";width:22px;height:2px;background:var(--indigo);
+}
+.page__footer{
+  position:absolute;bottom:8mm;left:14mm;right:14mm;
+  display:flex;justify-content:space-between;align-items:center;
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--ink-3);
+  border-top:1px solid var(--line-2);
+  padding-top:8px;font-weight:500;
+}
+
+/* ============ COVER ============ */
+.cover{
+  background:
+    radial-gradient(ellipse at 85% 15%, rgba(30,58,138,.10), transparent 55%),
+    radial-gradient(ellipse at 10% 85%, rgba(4,120,87,.07), transparent 50%),
+    var(--paper);
+  padding:16mm 14mm 18mm;
+}
+.cover__inner{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  position:relative;
+  z-index:2;
+  min-height:0;
+}
+.cover__top{
+  display:flex;align-items:center;justify-content:space-between;
+  font-family:'JetBrains Mono',monospace;
+  font-size:10.5px;letter-spacing:.28em;text-transform:uppercase;
+  color:var(--ink-3);font-weight:500;
+}
+.cover__top .dot{display:inline-flex;align-items:center;gap:12px}
+.cover__top .dot::before{
+  content:"";width:8px;height:8px;background:var(--emerald);
+  border-radius:50%;display:inline-block;
+}
+.cover__main{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  padding:20mm 0;
+  position:relative;
+}
+.cover__number{
+  font-family:'Fraunces',serif;
+  font-weight:900;
+  font-size:180px;
+  line-height:.82;
+  letter-spacing:-.05em;
+  color:var(--ink);
+  font-variation-settings:"opsz" 144;
+}
+.cover__number em{
+  font-style:normal;
+  color:var(--indigo);
+  font-weight:400;
+  font-size:60%;
+  vertical-align:top;
+  letter-spacing:-.02em;
+}
+.cover__title{
+  font-family:'Fraunces',serif;
+  font-weight:500;
+  font-size:26px;
+  line-height:1.2;
+  letter-spacing:-.015em;
+  color:var(--ink-2);
+  margin-top:24px;
+  max-width:540px;
+}
+.cover__title strong{font-weight:700;color:var(--ink)}
+.cover__sub{
+  font-size:15px;color:var(--ink-3);max-width:460px;
+  margin-top:18px;line-height:1.55;
+}
+.cover__meta{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:20px;
+  padding-top:26px;
+  border-top:1px solid var(--line);
+}
+.cover__meta dt{
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--ink-3);margin-bottom:7px;font-weight:500;
+}
+.cover__meta dd{
+  font-size:12.5px;color:var(--ink);
+  line-height:1.4;margin:0;padding:0;
+}
+.cover__meta dd.muted{font-size:11.5px;color:var(--ink-3)}
+
+.cover__links{
+  display:flex;gap:16px;flex-wrap:wrap;margin-top:14px;
+}
+.cover__links a{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--indigo);text-decoration:none;
+  border-bottom:1px solid var(--indigo);
+  padding-bottom:3px;font-weight:500;
+  transition:color .25s ease, border-color .25s ease;
+}
+.cover__links a:hover{color:var(--emerald);border-color:var(--emerald)}
+
+/* ============ SECTION HEADINGS ============ */
+.kicker{
+  font-family:'JetBrains Mono',monospace;
+  font-size:9.5px;letter-spacing:.28em;text-transform:uppercase;
+  color:var(--indigo);font-weight:600;
+  margin-bottom:14px;
+  display:flex;align-items:center;gap:12px;
+}
+.kicker::before{content:"";width:16px;height:2px;background:var(--indigo)}
+.h-sec{
+  font-family:'Fraunces',serif;
+  font-weight:600;
+  font-size:32px;
+  line-height:1.08;
+  letter-spacing:-.02em;
+  margin-bottom:10px;
+}
+.h-sec em{font-style:italic;color:var(--indigo);font-weight:500}
+.lede{
+  font-size:14px;color:var(--ink-2);max-width:560px;
+  line-height:1.6;margin-bottom:22px;
+}
+
+/* ============ STATS ============ */
+.stats{
+  display:grid;grid-template-columns:repeat(2,1fr);
+  gap:0;
+  border-top:1px solid var(--line);
+  border-left:1px solid var(--line);
+  margin-bottom:22px;
+}
+.stat{
+  border-right:1px solid var(--line);
+  border-bottom:1px solid var(--line);
+  padding:18px 18px 20px;
+  position:relative;
+}
+.stat__num{
+  font-family:'Fraunces',serif;
+  font-weight:700;
+  font-size:42px;line-height:1;
+  letter-spacing:-.03em;
+  color:var(--ink);
+}
+.stat__num sup{font-size:18px;color:var(--indigo);vertical-align:top;margin-left:3px;font-weight:500}
+.stat__label{
+  font-size:12px;color:var(--ink-2);
+  margin-top:10px;line-height:1.5;
+}
+.stat__src{
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--ink-3);margin-top:10px;font-weight:500;
+}
+
+/* ============ QUOTE ============ */
+.quote{
+  border-left:3px solid var(--indigo);
+  padding:8px 0 8px 20px;
+  margin:18px 0;
+  font-family:'Fraunces',serif;
+  font-size:16px;line-height:1.5;
+  color:var(--ink);
+  font-style:italic;
+  font-weight:400;
+  max-width:600px;
+}
+.quote cite{
+  display:block;font-style:normal;
+  font-family:'JetBrains Mono',monospace;
+  font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--ink-3);margin-top:12px;font-weight:500;
+}
+
+/* ============ TABLE ============ */
+.role-table{
+  width:100%;border-collapse:collapse;
+  font-size:12px;
+  margin:6px 0 18px;
+}
+.role-table th,.role-table td{
+  text-align:left;padding:11px 12px;
+  border-bottom:1px solid var(--line-2);
+  vertical-align:top;line-height:1.45;
+}
+.role-table th{
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--ink-3);font-weight:500;
+  border-bottom:1.5px solid var(--ink);
+  padding-bottom:10px;
+}
+.role-table td strong{font-weight:700;color:var(--ink);font-size:12.5px}
+.role-table td em{font-style:normal;color:var(--ink-3);font-size:11px}
+.role-table tr.highlight td{background:rgba(30,58,138,.05)}
+.role-table tr.highlight td:first-child{border-left:3px solid var(--indigo);padding-left:10px}
+
+/* ============ TIMELINE ============ */
+.timeline{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:12px;margin:18px 0;
+  position:relative;
+}
+.tl{
+  position:relative;
+  padding:16px 14px 18px;
+  border:1px solid var(--line);
+  background:var(--paper);
+}
+.tl::before{
+  content:"";position:absolute;top:-1px;left:-1px;right:-1px;height:3px;
+  background:var(--indigo);
+}
+.tl:nth-child(2)::before{background:var(--amber)}
+.tl:nth-child(3)::before{background:var(--emerald)}
+.tl__day{
+  font-family:'JetBrains Mono',monospace;
+  font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--ink-3);margin-bottom:9px;font-weight:500;
+}
+.tl__title{
+  font-family:'Fraunces',serif;
+  font-weight:600;font-size:15px;line-height:1.2;
+  margin-bottom:10px;letter-spacing:-.01em;
+}
+.tl__body{font-size:11.5px;color:var(--ink-2);line-height:1.5}
+.tl__body li{margin-left:14px;margin-bottom:5px}
+
+/* ============ LIST ============ */
+.list-num{counter-reset:ln;margin:12px 0}
+.list-num li{
+  counter-increment:ln;
+  list-style:none;
+  position:relative;
+  padding:11px 0 11px 42px;
+  border-bottom:1px solid var(--line-2);
+  font-size:12.5px;line-height:1.55;color:var(--ink-2);
+}
+.list-num li::before{
+  content:counter(ln,decimal-leading-zero);
+  position:absolute;left:0;top:11px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;letter-spacing:.1em;
+  color:var(--indigo);font-weight:600;
+}
+.list-num li strong{color:var(--ink);font-weight:700}
+
+/* ============ BARS ============ */
+.bars{margin:14px 0}
+.bar{margin-bottom:12px}
+.bar__head{
+  display:flex;justify-content:space-between;align-items:baseline;
+  margin-bottom:6px;
+  font-size:12px;color:var(--ink-2);
+}
+.bar__head b{
+  font-family:'Fraunces',serif;
+  font-weight:700;font-size:15px;color:var(--ink);
+}
+.bar__track{height:7px;background:var(--line-2);position:relative;overflow:hidden}
+.bar__fill{position:absolute;top:0;left:0;bottom:0;background:var(--indigo)}
+.bar__fill--e{background:var(--emerald)}
+.bar__fill--a{background:var(--amber)}
+.bar__fill--v{background:var(--violet)}
+
+/* ============ CALLOUT ============ */
+.callout{
+  border:1px solid var(--line);
+  border-left:3px solid var(--indigo);
+  padding:14px 18px;
+  margin:14px 0;
+  position:relative;
+  background:linear-gradient(180deg,rgba(30,58,138,.03),transparent);
+}
+.callout__title{
+  font-family:'Fraunces',serif;
+  font-weight:600;font-size:13px;
+  margin-bottom:7px;letter-spacing:-.01em;line-height:1.3;
+}
+.callout p{font-size:11.5px;color:var(--ink-2);line-height:1.55}
+.callout p + p{margin-top:6px}
+
+/* ============ GRID ============ */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:16px 0}
+.g2 > *{min-width:0}
+
+/* ============ CHIP ============ */
+.chip{
+  display:inline-block;
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;letter-spacing:.16em;text-transform:uppercase;
+  padding:5px 10px;border:1px solid var(--line);
+  color:var(--ink-2);margin:0 5px 6px 0;font-weight:500;
+}
+.chip--i{border-color:var(--indigo);color:var(--indigo)}
+.chip--e{border-color:var(--emerald);color:var(--emerald)}
+.chip--a{border-color:var(--amber);color:var(--amber)}
+
+/* ============ ARTICLE MAP ============ */
+.article-map{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+  margin:14px 0;
+}
+.art{
+  border:1px solid var(--line);
+  padding:10px 11px;
+  position:relative;
+  background:var(--paper);
+  min-height:64px;
+}
+.art__n{
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;letter-spacing:.14em;
+  color:var(--ink-3);font-weight:600;
+  margin-bottom:5px;
+}
+.art__t{
+  font-size:10.5px;
+  color:var(--ink);
+  line-height:1.35;
+  font-weight:500;
+}
+.art--general{border-top:2px solid var(--indigo)}
+.art--power{border-top:2px solid var(--emerald)}
+.art--mark{border-top:2px solid var(--amber)}
+.art--final{border-top:2px solid var(--violet)}
+
+/* ============ PRINCIPLES GRID ============ */
+.principles{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+  margin:16px 0;
+}
+.pr{
+  border:1px solid var(--line);
+  padding:14px 14px 16px;
+  background:var(--paper);
+  position:relative;
+}
+.pr__n{
+  font-family:'Fraunces',serif;
+  font-weight:700;
+  font-size:26px;
+  color:var(--indigo);
+  line-height:1;
+  letter-spacing:-.03em;
+  margin-bottom:8px;
+}
+.pr__t{
+  font-family:'Fraunces',serif;
+  font-size:13px;font-weight:600;
+  line-height:1.25;
+  color:var(--ink);
+  margin-bottom:6px;
+  letter-spacing:-.01em;
+}
+.pr__d{
+  font-size:10.5px;
+  color:var(--ink-3);
+  line-height:1.45;
+}
+
+/* ============ COMPARISON ============ */
+.compare{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:0;
+  border:1px solid var(--line);
+  margin:16px 0;
+}
+.compare__col{padding:18px 18px 20px;position:relative}
+.compare__col:first-child{border-right:1px solid var(--line);background:linear-gradient(180deg,rgba(30,58,138,.04),transparent)}
+.compare__col:last-child{background:linear-gradient(180deg,rgba(4,120,87,.04),transparent)}
+.compare__head{
+  font-family:'JetBrains Mono',monospace;
+  font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--ink-3);font-weight:600;
+  margin-bottom:10px;
+}
+.compare__col:first-child .compare__head{color:var(--indigo)}
+.compare__col:last-child .compare__head{color:var(--emerald)}
+.compare__title{
+  font-family:'Fraunces',serif;
+  font-weight:700;font-size:18px;letter-spacing:-.015em;
+  margin-bottom:12px;
+}
+.compare__col:first-child .compare__title{color:var(--indigo)}
+.compare__col:last-child .compare__title{color:var(--emerald)}
+.compare__list{list-style:none;font-size:11.5px;color:var(--ink-2);line-height:1.55}
+.compare__list li{padding:7px 0;border-bottom:1px solid var(--line-2);display:flex;gap:8px;align-items:flex-start}
+.compare__list li:last-child{border-bottom:none}
+.compare__list li::before{
+  content:"";flex-shrink:0;
+  width:14px;height:1px;background:var(--ink-3);
+  margin-top:9px;
+}
+
+/* ============ EXPERT ============ */
+.expert{
+  display:grid;grid-template-columns:130px 1fr;gap:24px;
+  align-items:center;
+  padding:22px 0;
+  border-top:1px solid var(--line);
+  border-bottom:1px solid var(--line);
+  margin:20px 0;
+}
+.expert__photo{
+  width:130px;height:130px;
+  border-radius:50%;
+  position:relative;overflow:hidden;
+  background:linear-gradient(135deg,#0B1220 0%,#2c2c2a 100%);
+  display:flex;align-items:center;justify-content:center;
+  border:1px solid var(--line);
+}
+.expert__photo::before{
+  content:"";position:absolute;inset:9px;
+  border:1px dashed rgba(251,252,254,.3);border-radius:50%;
+  z-index:2;pointer-events:none;
+}
+.expert__photo img{
+  width:100%;height:100%;object-fit:cover;
+  position:absolute;inset:0;z-index:1;
+}
+.expert__name{
+  font-family:'Fraunces',serif;
+  font-weight:700;font-size:22px;letter-spacing:-.02em;
+  margin-bottom:7px;
+}
+.expert__role{font-size:12px;color:var(--ink-2);margin-bottom:12px;line-height:1.55}
+.expert__links{display:flex;gap:16px;flex-wrap:wrap}
+.expert__links a{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--indigo);text-decoration:none;
+  border-bottom:1px solid var(--indigo);padding-bottom:3px;
+  font-weight:500;
+}
+.expert__links a:hover{color:var(--emerald);border-color:var(--emerald)}
+
+/* ============ CTA ============ */
+.cta{
+  background:var(--ink);color:var(--paper);
+  padding:26px 28px;margin-top:auto;
+  position:relative;overflow:hidden;
+}
+.cta::before{
+  content:"";position:absolute;top:-40px;right:-40px;
+  width:160px;height:160px;border:1px solid rgba(251,252,254,.15);
+  border-radius:50%;
+}
+.cta::after{
+  content:"";position:absolute;bottom:-60px;left:-20px;
+  width:120px;height:120px;border:1px solid rgba(251,252,254,.1);
+  border-radius:50%;
+}
+.cta h3{
+  font-family:'Fraunces',serif;
+  font-weight:600;font-size:20px;line-height:1.2;
+  margin-bottom:10px;position:relative;z-index:2;letter-spacing:-.015em;
+}
+.cta p{font-size:12.5px;color:rgba(251,252,254,.78);line-height:1.6;position:relative;z-index:2;max-width:460px}
+.cta__meta{
+  display:flex;gap:22px;margin-top:16px;position:relative;z-index:2;
+  font-family:'JetBrains Mono',monospace;
+  font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;
+  color:rgba(251,252,254,.55);font-weight:500;
+}
+
+/* ============ DECO ============ */
+.deco{position:absolute;inset:0;pointer-events:none;z-index:0}
+
+/* ============ PRINT ============ */
+@page{size:210mm 297mm;margin:0}
+@media print{
+  html, body{
+    margin:0 !important;
+    padding:0 !important;
+    width:210mm;
+    background:var(--paper);
+  }
+  .toolbar{display:none !important}
+  .document{
+    padding:0 !important;
+    margin:0 !important;
+    gap:0 !important;
+    max-width:none !important;
+    display:block !important;
+  }
+  .page{
+    box-shadow:none !important;
+    margin:0 !important;
+    page-break-after:always;
+    break-after:page;
+    page-break-inside:avoid;
+    break-inside:avoid;
+  }
+  .page:last-child{page-break-after:auto;break-after:auto}
+}
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <div class="toolbar__brand">ФЗ-243 · <span>Разбор</span></div>
+  <div class="toolbar__actions">
+    <button class="btn btn--ghost" onclick="window.print()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2M6 14h12v8H6z"/></svg>
+      Печать
+    </button>
+    <button class="btn" id="downloadBtn" onclick="downloadPDF()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+      <span id="downloadText">Скачать PDF</span>
+    </button>
+  </div>
+</div>
+
+<main class="document" id="document">
+
+<!-- ==================== PAGE 1 · COVER ==================== -->
+<section class="page cover">
+  <svg class="deco" viewBox="0 0 210 297" preserveAspectRatio="none">
+    <circle cx="175" cy="80" r="55" fill="none" stroke="#1E3A8A" stroke-width="0.4" opacity="0.5"/>
+    <circle cx="175" cy="80" r="38" fill="none" stroke="#047857" stroke-width="0.4" opacity="0.5"/>
+    <circle cx="175" cy="80" r="20" fill="none" stroke="#0B1220" stroke-width="0.4" opacity="0.35"/>
+    <circle cx="175" cy="80" r="3" fill="#1E3A8A" opacity="0.6"/>
+    <circle cx="140" cy="35" r="2" fill="#047857" opacity="0.5"/>
+    <circle cx="200" cy="120" r="2" fill="#1E3A8A" opacity="0.5"/>
+    <line x1="140" y1="35" x2="175" y2="80" stroke="#1E3A8A" stroke-width="0.3" opacity="0.4"/>
+    <line x1="200" y1="120" x2="175" y2="80" stroke="#047857" stroke-width="0.3" opacity="0.4"/>
+    <path d="M 0 260 Q 40 250 80 260 T 160 260 T 210 258" fill="none" stroke="#1E3A8A" stroke-width="0.4" opacity="0.35"/>
+  </svg>
+
+  <div class="cover__inner">
+    <div class="cover__top">
+      <span class="dot">Правовой разбор · 2026</span>
+      <span>№ 243-ФЗ</span>
+    </div>
+
+    <div class="cover__main">
+      <div class="cover__number">
+        243<em>-ФЗ</em>
+      </div>
+      <div class="cover__title">
+        <strong>Федеральный закон</strong> о поддержке развития технологий искусственного интеллекта в Российской Федерации
+      </div>
+      <p class="cover__sub">
+        Разбор для руководителей, разработчиков и тех, кто внедряет ИИ в России.
+        Что меняется с 1 сентября 2026 года, что такое суверенные и национальные
+        модели и как новые требования отразятся на вашем бизнесе.
+      </p>
+    </div>
+
+    <dl class="cover__meta">
+      <div>
+        <dt>Автор</dt>
+        <dd>Алексей Прохоров</dd>
+        <dd class="muted">CAIO · автор книги</dd>
+      </div>
+      <div>
+        <dt>Основа</dt>
+        <dd>ФЗ № 243-ФЗ</dd>
+        <dd class="muted">26 июля 2026 года</dd>
+      </div>
+      <div>
+        <dt>Формат</dt>
+        <dd>13 страниц</dd>
+        <dd class="muted">аналитика · схемы</dd>
+      </div>
+      <div>
+        <dt>Вступление в силу</dt>
+        <dd>1 сентября 2026</dd>
+        <dd class="muted">частями до 2027</dd>
+      </div>
+    </dl>
+  </div>
+</section>
+
+<!-- ==================== PAGE 2 · ABOUT ==================== -->
+<section class="page">
+  <div class="page__mark">О разборе</div>
+  <div class="page__num">02 / 13</div>
+
+  <div style="margin-top:14mm;display:flex;flex-direction:column;flex:1">
+    <div class="kicker">О чём этот разбор</div>
+    <h2 class="h-sec">Правовая рамка для ИИ<br>в <em>российской практике</em></h2>
+    <p class="lede">
+      26 июля 2026 года подписан Федеральный закон № 243-ФЗ, который
+      впервые на уровне закона формирует правила игры для разработки,
+      внедрения и применения больших фундаментальных моделей ИИ в России.
+    </p>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="stat__num">13</div>
+        <div class="stat__label">статей в законе</div>
+        <div class="stat__src">ФЗ № 243-ФЗ</div>
+      </div>
+      <div class="stat">
+        <div class="stat__num">9</div>
+        <div class="stat__label">принципов правового регулирования</div>
+        <div class="stat__src">Статья 4</div>
+      </div>
+      <div class="stat">
+        <div class="stat__num">1<sup>млрд</sup></div>
+        <div class="stat__label">параметров — порог для «большой фундаментальной модели»</div>
+        <div class="stat__src">Статья 3</div>
+      </div>
+      <div class="stat">
+        <div class="stat__num">5</div>
+        <div class="stat__label">уровней власти задействовано в регулировании</div>
+        <div class="stat__src">Статья 5</div>
+      </div>
+    </div>
+
+    <div class="g2" style="margin-top:18px">
+      <div>
+        <div class="kicker">Что внутри</div>
+        <ol class="list-num">
+          <li><strong>Ключевые понятия</strong> — что закон считает ИИ, моделью и разработчиком.</li>
+          <li><strong>Принципы</strong> — девять базовых основ регулирования.</li>
+          <li><strong>Полномочия</strong> — кто за что отвечает в системе.</li>
+          <li><strong>Суверенные и национальные модели</strong> — два статуса, их различия.</li>
+          <li><strong>Права и обязанности</strong> разработчиков.</li>
+          <li><strong>Маркировка</strong> и вопросы интеллектуальной собственности.</li>
+          <li><strong>Календарь</strong> вступления в силу — три ключевые даты.</li>
+          <li><strong>Практика</strong> — что это значит для вашего бизнеса.</li>
+        </ol>
+      </div>
+      <div>
+        <div class="kicker">Кому полезно</div>
+        <div class="callout" style="margin-top:0">
+          <div class="callout__title">Руководителям</div>
+          <p>Понять, какие требования затрагивают вашу компанию и что планировать уже сейчас.</p>
+        </div>
+        <div class="callout">
+          <div class="callout__title">Разработчикам ИИ</div>
+          <p>Разобраться в требованиях к «суверенным» и «национальным» моделям и мерах поддержки.</p>
+        </div>
+        <div class="callout">
+          <div class="callout__title">Юристам и комплаенсу</div>
+          <p>Получить структурированную карту норм для оценки регуляторных рисков.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout" style="margin-top:16px;border-left-color:var(--emerald)">
+      <div class="callout__title">Про автора</div>
+      <p>Разбор подготовил Алексей Прохоров — директор по развитию технологий искусственного интеллекта, автор книги «Записки директора по искусственному интеллекту». Это взгляд практика, который ежедневно работает с ИИ-проектами и оценивает регуляторные изменения через призму реальной работы компаний.</p>
+      <div class="cover__links" style="margin-top:12px">
+        <a href="https://max.ru/alproailife" target="_blank" rel="noopener">Подписаться → MAX-канал</a>
+        <a href="mailto:director.brands@yandex.ru?subject=Заказ книги">Заказать книгу</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="page__footer">
+    <span>ФЗ-243 · Разбор</span>
+    <span>О разборе</span>
+  </div>
+</section>
+
+<!-- ==================== PAGE 3 · PASSPORT ==================== -->
+<section class="page">
+  <div class="page__mark">01 · Паспорт</div>
+  <div class="page__num">03 / 13</div>
+
+  <div style="margin-top:14mm">
+    <div class="kicker">Паспорт документа</div>
+    <h2 class="h-sec">Ключевые факты<br>о <em>законе № 243-ФЗ</em></h2>
+
+    <div class="g2" style="margin-top:6px">
+      <div class="callout" style="margin-top:0;border-left-color:var(--indigo)">
+        <div class="callout__title">Полное название</div>
+        <p>Федеральный закон «О поддержке развития технологий искусственного интеллекта в Российской Федерации»</p>
+      </div>
+      <div class="callout" style="margin-top:0;border-left-color:var(--indigo)">
+        <div class="callout__title">Номер и дата</div>
+        <p>№ 243-ФЗ от 26 июля 2026 года. Подписан Президентом РФ в Кремле.</p>
+      </div>
+    </div>
+
+    <div class="kicker" style="margin-top:22px">Путь документа</div>
+    <div class="timeline">
+      <div class="tl">
+        <div class="tl__day">8 июля 2026</div>
+        <div class="tl__title">Принят Госдумой</div>
+        <p class="tl__body">Одобрен нижней палатой парламента</p>
+      </div>
+      <div class="tl">
+        <div class="tl__day">17 июля 2026</div>
+        <div class="tl__title">Одобрен Совфедом</div>
+        <p class="tl__body">Получено одобрение Совета Федерации</p>
+      </div>
+      <div class="tl">
+        <div class="tl__day">26 июля 2026</div>
+        <div class="tl__title">Подписан</div>
+        <p class="tl__body">Подпись Президента РФ, публикация</p>
+      </div>
+    </div>
+
+    <div class="kicker" style="margin-top:22px">Что регулирует</div>
+    <div class="article-map">
+      <div class="art art--general">
+        <div class="art__n">СТ. 1</div>
+        <div class="art__t">Предмет регулирования</div>
+      </div>
+      <div class="art art--general">
+        <div class="art__n">СТ. 2</div>
+        <div class="art__t">Цели закона</div>
+      </div>
+      <div class="art art--general">
+        <div class="art__n">СТ. 3</div>
+        <div class="art__t">Основные понятия</div>
+      </div>
+      <div class="art art--general">
+        <div class="art__n">СТ. 4</div>
+        <div class="art__t">Принципы</div>
+      </div>
+      <div class="art art--power">
+        <div class="art__n">СТ. 5</div>
+        <div class="art__t">Полномочия органов власти</div>
+      </div>
+      <div class="art art--power">
+        <div class="art__n">СТ. 6</div>
+        <div class="art__t">Суверенные и национальные модели</div>
+      </div>
+      <div class="art art--power">
+        <div class="art__n">СТ. 7</div>
+        <div class="art__t">Права разработчиков</div>
+      </div>
+      <div class="art art--power">
+        <div class="art__n">СТ. 8</div>
+        <div class="art__t">Обязанности разработчиков</div>
+      </div>
+      <div class="art art--mark">
+        <div class="art__n">СТ. 9</div>
+        <div class="art__t">Маркировка ИИ-контента</div>
+      </div>
+      <div class="art art--mark">
+        <div class="art__n">СТ. 10</div>
+        <div class="art__t">Интеллектуальная собственность</div>
+      </div>
+      <div class="art art--final">
+        <div class="art__n">СТ. 11</div>
+        <div class="art__t">Ответственность</div>
+      </div>
+      <div class="art art--final">
+        <div class="art__n">СТ. 12</div>
+        <div class="art__t">Международное сотрудничество</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:10px;font-size:10px;color:var(--ink-3);font-family:'JetBrains Mono',monospace;letter-spacing:.16em;text-transform:uppercase;font-weight:500">
+      <span><span style="display:inline-block;width:10px;height:2px;background:var(--indigo);vertical-align:middle;margin-right:6px"></span>Общие положения</span>
+      <span><span style="display:inline-block;width:10px;height:2px;background:var(--emerald);vertical-align:middle;margin-right:6px"></span>Полномочия и поддержка</span>
+      <span><span style="display:inline-block;width:10px;height:2px;background:var(--amber);vertical-align:middle;margin-right:6px"></span>Маркировка и ИС</span>
+      <span><span style="display:inline-block;width:10px;height:2px;background:var(--violet);vertical-align:middle;margin-right:6px"></span>Ответственность и финал</span>
+    </div>
+  </div>
+
+  <div class="page__footer">
+    <span>ФЗ-243 · Разбор</span>
+    <span>01 · Паспорт</span>
+  </div>
+</section>
+
+<!-- ==================== PAGE 4 · DEFINITIONS ==================== -->
+<section class="page">
+  <div class="page__mark">02 · Понятия</div>
+  <div class="page__num">04 / 13</div>
+
+  <div style="margin-top:14mm">
+    <div class="kicker">Статья 3 · Основные понятия</div>
+    <h2 class="h-sec">Что закон называет<br><em>искусственным интеллектом</em></h2>
+
+    <div class="callout" style="margin-top:0;border-left-color:var(--indigo);background:linear-gradient(180deg,rgba(30,58,138,.05),transparent)">
+      <div class="callout__title" style="font-size:14px">Искусственный интеллект</div>
+      <p style="font-size:12px;line-height:1.6">Комплекс технологических решений, позволяющий имитировать когнитивные функции человека — включая способность самостоятельно совершенствовать свои функции, повышать точность решений за счёт анализа новых данных и выполнять поиск решений без заранее заданного алгоритма — и получать результаты, сопоставимые с результатами интеллектуальной деятельности человека или превосходящие их.</p>
+    </div>
+
+    <div class="callout" style="border-left-color:var(--indigo);background:linear-gradient(180deg,rgba(30,58,138,.05),transparent)">
+      <div class="callout__title" style="font-size:14px">Большая фундаментальная модель ИИ</div>
+      <p style="font-size:12px;line-height:1.6">Программа для ЭВМ, предназначенная для выполнения интеллектуальных задач на уровне или выше человеческого, обучающаяся на составах данных, одновременно являющаяся основой для создания и доработки различных видов ПО, содержащая <strong style="color:var(--indigo)">не менее 1 миллиарда параметров</strong> и применяемая для выполнения большого количества различных задач.</p>
+    </div>
+
+    <div class="g2" style="margin-top:6px">
+      <div class="callout" style="margin-top:0">
+        <div class="callout__title">Состав данных</div>
+        <p>Совокупность данных с машиночитаемым описанием, структурированных по определённым признакам и необходимых для разработки и развития больших фундаментальных моделей ИИ.</p>
+      </div>
+      <div class="callout" style="margin-top:0">
+        <div class="callout__title">Обучение модели</div>
+        <p>Процесс подбора числовых значений (параметров) модели и параметров процесса обучения для формирования или совершенствования её способности выполнять заданные функции.</p>
+      </div>
+    </div>
+
+    <div class="callout">
+      <div class="callout__title">Разработчик большой фундаментальной модели ИИ</div>
+      <p>Индивидуальный предприниматель или юридическое лицо, осуществляющие разработку — включая проектирование и обучение — или модификацию большой фундаментальной модели ИИ.</p>
+    </div>
+
+    <div class="kicker" style="margin-top:16px">Ключевой порог</div>
+    <div class="stats" style="grid-template-columns:1fr 1fr;margin-bottom:0">
+      <div class="stat">
+        <div class="stat__num">1<sup>млрд</sup></div>
+        <div class="stat__label">минимальное число параметров, чтобы модель считалась «большой фундаментальной»</div>
+        <div class="stat__src">Ст. 3, п. 2</div>
+      </div>
+      <div class="stat">
+        <div class="stat__num">∞</div>
+        <div class="stat__label">верхнего порога нет — любая модель крупнее 1 млрд параметров попадает под регулирование</div>
+        <div class="stat__src">Ст. 3</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page__footer">
+    <span>ФЗ-243 · Разбор</span>
+    <span>02 · Понятия</span>
+  </div>
+</section>
+
+<!-- ==================== PAGE 5 · PRINCIPLES ==================== -->
+<section class="page">
+  <div class="page__mark">03 · Принципы</div>
+  <div class="page__num">05 / 13</div>
+
+  <div style="margin-top:14mm">
+    <div class="kicker">Статья 4 · Принципы регулирования</div>
+    <h2 class="h-sec">Девять принципов,<br>на которых <em>стоит закон</em></h2>
+    <p class="lede">
+      Правовое регулирование отношений в сфере разработки, внедрения
+      и применения больших фундаментальных моделей ИИ основывается
+      на следующих принципах.
+    </p>
+
+    <div class="principles">
+      <div class="pr">
+        <div class="pr__n">01</div>
+        <div class="pr__t">Благоприятные условия</div>
+        <div class="pr__d">Создание условий для разработки, ускоренного внедрения и применения моделей.</div>
+      </div>
+      <div class="pr">
+        <div class="pr__n">02</div>
+        <div class="pr__t">Технологическая независимость</div>
+        <div class="pr__d">Национальный контроль над критическими и сквозными технологиями.</div>
+      </div>
+      <div class="pr">
+        <div class="pr__n">03</div>
+        <div class="pr__t">Права и свободы граждан</div>
+        <div class="pr__d">Обеспечение прав, свобод и законных интересов человека и гражданина.</div>
+      </div>
+      <div class="pr">
+        <div class="pr__n">04</div>
+        <div class="pr__t">Автономия и свобода воли</div>
+        <div class="pr__d">Уважение автономии и свободы воли человека при работе с ИИ.</div>
+      </div>
+      <div class="pr">
+        <div class="pr__n">05</div>
+        <div class="pr__t">Риск-ориентированный подход</div>
+        <div class="pr__d">Требования — исходя из вероятности и масштабов причиняемого вреда.</div>
+      </div>
+      <div class="pr">
+        <div class="pr__n">06</div>
+        <div class="pr__t">Традиционные ценности</div>
+        <div class="pr__d">Учёт и уважение российских духовно-нравственных ценностей.</div>
+      </div>
+      <div class="pr">
+        <div class="pr__n">07</div>
+        <div class="pr__t">Поддержка разработчиков</div>
+        <div class="pr__d">Приоритетная поддержка российских разработчиков больших моделей.</div>
+      </div>
+      <div class="pr">
+        <div class="pr__n">08</div>
+        <div class="pr__t">Международное сотрудничество</div>
+        <div class="pr__d">Развитие сотрудничества в сфере разработки и применения ИИ.</div>
+      </div>
+      <div class="pr">
+        <div class="pr__n">09</div>
+        <div class="pr__t">Безопасность</div>
+        <div class="pr__d">Предотвращение угроз конституционному строю, обороне и гражданам.</div>
+      </div>
+    </div>
+
+    <blockquote class="quote">
+      Технологическая независимость — разработка моделей и создание продукции
+      с их применением при сохранении национального контроля над критическими
+      и сквозными технологиями.
+      <cite>Ст. 4, п. 2 · ФЗ № 243-ФЗ</cite>
+    </blockquote>
+  </div>
+
+  <div class="page__footer">
+    <span>ФЗ-243 · Разбор</span>
+    <span>03 · Принципы</span>
+  </div>
+</section>
+
+<!-- ==================== PAGE 6 · POWERS ==================== -->
+<section class="page">
+  <div class="page__mark">04 · Полномочия</div>
+  <div class="page__num">06 / 13</div>
+
+  <div style="margin-top:14mm">
+    <div class="kicker">Статья 5 · Полномочия</div>
+    <h2 class="h-sec">Кто за что отвечает<br>в <em>новой системе</em></h2>
+
+    <div class="callout" style="margin-top:0;border-left-color:var(--indigo)">
+      <div class="callout__title">Президент Российской Федерации</div>
+      <p>Утверждает Национальную стратегию развития искусственного интеллекта. Осуществляет иные полномочия в сфере разработки, внедрения и применения технологий ИИ.</p>
+    </div>
+
+    <div class="callout" style="border-left-color:var(--emerald)">
+      <div class="callout__title">Правительство Российской Федерации</div>
+      <p>Координирует деятельность федеральных органов. Определяет меры господдержки (финансовой, имущественной, гарантийной, информационной). Устанавливает случаи, в которых допускается применение исключительно суверенных и (или) национальных моделей.</p>
+    </div>
+
+    <div class="callout" style="border-left-color:var(--amber)">
+      <div class="callout__title">Уполномоченный федеральный орган (Минцифры)</div>
+      <p>Анализирует развитие больших фундаментальных моделей. Оказывает методическую поддержку госорганам. Вырабатывает меры стимулирования разработки, внедрения и применения моделей.</p>
+    </div>
+
+    <div class="g2" style="margin-top:6px">
+      <div class="callout" style="margin-top:0;border-left-color:var(--violet)">
+        <div class="callout__title">Федеральные органы и ЦБ</div>
+        <p>В пределах компетенции осуществляют внедрение больших фундаментальных моделей ИИ в ключевых отраслях экономики, социальной сфере и сфере государственного и муниципального управления.</p>
+      </div>
+      <div class="callout" style="margin-top:0;border-left-color:var(--violet)">
+        <div class="callout__title">Субъекты РФ</div>
+        <p>Высший исполнительный орган субъекта по согласованию с ФСБ вправе установить порядок предоставления доступа к данным региональных информационных систем для обучения моделей.</p>
+      </div>
+    </div>
+
+    <div class="kicker" style="margin-top:18px">Ключевые права Правительства</div>
+    <ol class="list-num">
+      <li><strong>Установка исключений.</strong> Определять сферы, где допускаются только суверенные и (или) национальные модели.</li>
+      <li><strong>Требования по рискам.</strong> Вводить требования по предотвращению рисков, связанных с применением моделей в отраслях.</li>
+      <li><strong>Доступ к данным.</strong> По согласованию с ФСБ определять порядок доступа к данным федеральных информационных систем для обучения моделей.</li>
+    </ol>
+  </div>
+
+  <div class="page__footer">
+    <span>ФЗ-243 · Разбор</span>
+    <span>04 · Полномочия</span>
+  </div>
+</section>
+
+<!-- ==================== PAGE 7 · SOVEREIGN VS NATIONAL ==================== -->
+<section class="page">
+  <div class="page__mark">05 · Модели</div>
+  <div class="page__num">07 / 13</div>
+
+  <div style="margin-top:14mm">
+    <div class="kicker">Статья 6 · Суверенные и национальные модели</div>
+    <h2 class="h-sec">Два статуса<br>для <em>российских моделей</em></h2>
+    <p class="lede">
+      Закон вводит два особых статуса больших фундаментальных моделей ИИ —
+      «суверенная» и «национальная». Оба дают доступ к мерам господдержки,
+      но требования различаются.
+    </p>
+
+    <div class="compare">
+      <div class="compare__col">
+        <div class="compare__head">Статус</div>
+        <div class="compare__title">Суверенная модель</div>
+        <ul class="compare__list">
+          <li>Разработчик — российское юридическое лицо</li>
+          <li>Разработка и изменение характеристик на всех стадиях — российским юрлицом</li>
+          <li>Полная техническая и технологическая воспроизводимость цикла разработки</li>
+          <li>Ответы пользователям и хранение данных — в ЦОД на территории РФ</li>
+          <li>Соответствие законодательству РФ и традиционным ценностям</li>
+        </ul>
+      </div>
+      <div class="compare__col">
+        <div class="compare__head">Статус</div>
+        <div class="compare__title">Национальная модель</div>
+        <ul class="compare__list">
+          <li>Разработчик — российское юридическое лицо</li>
+          <li>Существенные характеристики определяются и изменяются российским юрлицом</li>
+          <li>Компоненты — отечественные или зарубежные на условиях открытой лицензии</li>
+          <li>Ответы пользователям и хранение данных — в ЦОД на территории РФ</li>
+          <li>Соответствие законодательству РФ и традиционным ценностям</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout" style="margin-top:14px">
+      <div class="callout__title">Что такое «российское юридическое лицо»</div>
+      <p>Юридическое лицо, находящееся под контролем Российской Федерации, субъекта РФ, муниципального образования или гражданина РФ без иного гражданства. Под контролем понимается возможность определять решения через прямое или косвенное распоряжение <strong>более чем 50% голосов</strong> в уставном капитале.</p>
+    </div>
+
+    <div class="kicker" style="margin-top:14px">Порядок присвоения статуса</div>
+    <p style="font-size:12px;color:var(--ink-2);line-height:1.6">
+      Правительство Российской Федерации устанавливает порядок учёта и присвоения статуса суверенных и национальных больших фундаментальных моделей искусственного интеллекта. Меры государственной поддержки предоставляются разработчикам, получившим соответствующий статус.
+    </p>
+  </div>
+
+  <div class="page__footer">
+    <span>ФЗ-243 · Разбор</span>
+    <span>05 · Модели</span>
+  </div>
+</section>
+
+<!-- ==================== PAGE 8 · RIGHTS & DUTIES ==================== -->
+<section class="page">
+  <div class="page__mark">06 · Права и обязанности</div>
+  <div class="page__num">08 / 13</div>
+
+  <div style="margin-top:14mm">
+    <div class="kicker">Статьи 7–8 · Разработчики</div>
+    <h2 class="h-sec">Что разработчик<br><em>может и должен</em></h2>
+
+    <div class="g2" style="margin-top:8px">
+      <div>
+        <div class="kicker" style="color:var(--emerald)">Права · Статья 7</div>
+        <ol class="list-num" style="counter-reset:ln">
+          <li><strong>Господдержка.</strong> Доступ к мерам, направленным на стимулирование разработки, внедрения и применения моделей.</li>
+          <li><strong>Обучение моделей.</strong> Осуществлять обучение больших моделей с учётом положений статьи 10.</li>
+          <li><strong>Отраслевые организации.</strong> Участвовать в разработке этических правил и подготовке предложений по госполитике.</li>
+          <li><strong>Международное сотрудничество.</strong> Реализовывать совместные исследования и экспортировать российские технологии ИИ.</li>
+          <li><strong>Страхование.</strong> Страховать имущественные интересы и ответственность при применении моделей.</li>
+        </ol>
+      </div>
+      <div>
+        <div class="kicker" style="color:var(--crimson)">Обязанности · Статья 8</div>
+        <ol class="list-num">
+          <li><strong>Безопасность.</strong> Принимать организационные и технические меры по обеспечению безопасности модели.</li>
+          <li><strong>Правила эксплуатации.</strong> Определять ограничения, условия применения, обновления и вывода из эксплуатации.</li>
+          <li><strong>Техническая документация.</strong> Вести её с описанием ключевых параметров и ограничений модели в объёме, необходимом для оценки безопасности.</li>
+        </ol>
+
+        <div class="callout" style="margin-top:12px;border-left-color:var(--crimson)">
+          <div class="callout__title">Важно</div>
+          <p>Обязанности по статьям 7–8 вступают в силу <strong>с 1 марта 2027 года</strong> — через полгода после основной части закона.</p>
+        </div>
+      </div>
+    </div>
+
+    <blockquote class="quote" style="margin-top:16px">
+      Разработчик обязан вести техническую документацию с описанием ключевых
+      параметров и ограничений модели в объёме, необходимом для оценки
+      безопасности её применения.
+      <cite>Ст. 8, п. 3 · ФЗ № 243-ФЗ</cite>
+    </blockquote>
+  </div>
+
+  <div class="page__footer">
+    <span>ФЗ-243 · Разбор</span>
+    <span>06 · Права и обязанности</span>
+  </div>
+</section>
+
+<!-- ==================== PAGE 9 · MARKING ==================== -->
+<section class="page">
+  <div class="page__mark">07 · Маркировка</div>
+  <div class="page__num">09 / 13</div>
+
+  <div style="margin-top:14mm">
+    <div class="kicker">Статья 9 · Маркировка ИИ-контента</div>
+    <h2 class="h-sec">Информационное<br><em>предупреждение</em></h2>
+
+    <div class="callout" style="margin-top:0;border-left-color:var(--amber)">
+      <div class="callout__title">Что вводит закон</div>
+      <p>Лицу, применяющему большую фундаментальную модель ИИ для создания информационного материала в аудио- и (или) визуальной форме, обеспечивается возможность размещения информационного предупреждения о применении технологий искусственного интеллекта.</p>
+    </div>
+
+    <div class="g2" style="margin-top:6px">
+      <div class="callout" style="margin-top:0">
+        <div class="callout__title">Формат и содержание</div>
+        <p>Определяются соглашением между лицом, применяющим модель, и лицом, предоставляющим возможность её применения.</p>
+      </div>
+      <div class="callout" style="margin-top:0;border-left-color:var(--crimson)">
+        <div class="callout__title">Обязанность крупных платформ</div>
+        <p>Сайты и сервисы с аудиторией <strong>более 500 000 пользователей в сутки</strong> обязаны обеспечить возможность размещения такого предупреждения.</p>
+      </div>
+    </div>
+
+    <div class="kicker" style="margin-top:22px">Что это значит на практике</div>
+    <div class="timeline">
+      <div class="tl">
+        <div class="tl__day">Для авторов</div>
+        <div class="tl__title">Возможность метки</div>
+        <p class="tl__body">При использовании ИИ для создания аудио или видео контента — можно добавить предупреждение.</p>
+      </div>
+      <div class="tl">
+        <div class="tl__day">Для платформ</div>
+        <div class="tl__title">Обязанность обеспечить</div>
+        <p class="tl__body">Крупные сервисы (500 000+ польз./сутки) должны предоставить пользователям такую возможность.</p>
+      </div>
+      <div class="tl">
+        <div class="tl__day">Для вендоров ИИ</div>
+        <div class="tl__title">Соглашение о формате</div>
+        <p class="tl__body">Формат предупреждения — по соглашению между пользователем и владельцем модели.</p>
+      </div>
+    </div>
+
+    <blockquote class="quote">
+      Владелец сайта с аудиторией более 500 тысяч пользователей в сутки
+      обязан обеспечивать пользователям возможность размещения
+      информационного предупреждения о применении ИИ.
+      <cite>Ст. 9, ч. 3 · ФЗ № 243-ФЗ</cite>
+    </blockquote>
+  </div>
+
+  <div class="page__footer">
+    <span>ФЗ-243 · Разбор</span>
+    <span>07 · Маркировка</span>
+  </div>
+</section>
+
+<!-- ==================== PAGE 10 · IP ==================== -->
+<section class="page">
+  <div class="page__mark">08 · Интеллектуальная собственность</div>
+  <div class="page__num">10 / 13</div>
+
+  <div style="margin-top:14mm">
+    <div class="kicker">Статья 10 · ИС и обучение моделей</div>
+    <h2 class="h-sec">Права на результаты<br>и <em>исключение для обучения</em></h2>
+
+    <div class="callout" style="margin-top:0;border-left-color:var(--indigo)">
+      <div class="callout__title">Обязанность уведомить пользователя</div>
+      <p>Лица, предоставляющие возможность применения больших фундаментальных моделей ИИ, обязаны уведомить пользователя:</p>
+      <p><strong>1.</strong> о принадлежности прав на результаты интеллектуальной деятельности, полученные с помощью модели;</p>
+      <p><strong>2.</strong> об условиях обеспечения доступа, использования и сохранения созданных с помощью модели результатов.</p>
+    </div>
+
+    <div class="callout" style="border-left-color:var(--emerald);background:linear-gradient(180deg,rgba(4,120,87,.05),transparent)">
+      <div class="callout__title" style="color:var(--emerald)">Исключение для обучения суверенных и национальных моделей</div>
+      <p>Не является нарушением авторских и (или) смежных прав обращение к информации, содержащейся в объектах авторского права, в целях практического применения положений, включая:</p>
+      <p>— извлечение, сравнение, классификацию и анализ закономерностей, тенденций и корреляций;</p>
+      <p>— воспроизведение посредством краткосрочной записи в память ЭВМ <strong>исключительно для обучения</strong> суверенной и (или) национальной больших фундаментальных моделей ИИ.</p>
+      <p>Условие: разработчиком используется экземпляр произведения, полученный правомерно, либо объект был доведён до всеобщего сведения и доступен для анализа без ограничений техническими средствами.</p>
+    </div>
+
+    <div class="kicker" style="margin-top:16px">Ключевое условие</div>
+    <div class="g2" style="margin-top:6px">
+      <div class="callout" style="margin-top:0">
+        <div class="callout__title">Правомерное получение</div>
+        <p>Экземпляр произведения должен быть получен разработчиком правомерно — легально, без нарушения прав.</p>
+      </div>
+      <div class="callout" style="margin-top:0">
+        <div class="callout__title">Или общедоступность</div>
+        <p>Либо объект доведён до всеобщего сведения и доступен для анализа без технических ограничений.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="page__footer">
+    <span>ФЗ-243 · Разбор</span>
+    <span>08 · Интеллектуальная собственность</span>
+  </div>
+</section>
+
+<!-- ==================== PAGE 11 · TIMELINE ==================== -->
+<section class="page">
+  <div class="page__mark">09 · Календарь</div>
+  <div class="page__num">11 / 13</div>
+
+  <div style="margin-top:14mm">
+    <div class="kicker">Статья 13 · Вступление в силу</div>
+    <h2 class="h-sec">Три даты, которые<br><em>важно запомнить</em></h2>
+    <p class="lede">
+      Закон вступает в силу частями — основная часть с 1 сентября 2026 года,
+      отдельные положения с 1 марта 2027 года. Для существующих систем
+      предусмотрен переходный период до 2032 года.
+    </p>
+
+    <div class="timeline" style="margin-top:12px">
+      <div class="tl">
+        <div class="tl__day">1 сентября 2026</div>
+        <div class="tl__title">Основная часть</div>
+        <p class="tl__body">Вступает в силу большинство статей: определения, принципы, полномочия, маркировка, ИС, ответственность, международное сотрудничество.</p>
+      </div>
+      <div class="tl">
+        <div class="tl__day">1 марта 2027</div>
+        <div class="tl__title">Вторая волна</div>
+        <p class="tl__body">Вступают: п. 3–5 ч. 2 ст. 5, ч. 2–5 ст. 6, ст. 8–10. Это суверенные и национальные модели, права и обязанности разработчиков, требования к ИС.</p>
+      </div>
+      <div class="tl">
+        <div class="tl__day">1 сентября 2032</div>
+        <div class="tl__title">Переходный период</div>
+        <p class="tl__body">До этой даты исключения для суверенных моделей не распространяются на системы, созданные и эксплуатируемые до вступления в силу — при условии обработки данных в РФ.</p>
+      </div>
+    </div>
+
+    <div class="callout" style="margin-top:20px;border-left-color:var(--emerald)">
+      <div class="callout__title">Важное уточнение про переходный период</div>
+      <p>Если ваша информационная система использует большие фундаментальные модели ИИ, созданные и (или) эксплуатируемые до вступления в силу пункта 3 части 2 статьи 5, — требования о применении исключительно суверенных и (или) национальных моделей <strong>не применяются к ней до 1 сентября 2032 года</strong>, при условии обработки и хранения данных на территории РФ.</p>
+    </div>
+
+    <div class="kicker" style="margin-top:16px">Экспериментальные режимы</div>
+    <p style="font-size:12px;color:var(--ink-2);line-height:1.6">
+      В соответствии с ФЗ от 31 июля 2020 года № 258-ФЗ «Об экспериментальных
+      правовых режимах в сфере цифровых и технологических инноваций»
+      может быть установлено специальное регулирование, предусматривающее
+      особенности применения статей 3 и 6 настоящего закона.
+    </p>
+  </div>
+
+  <div class="page__footer">
+    <span>ФЗ-243 · Разбор</span>
+    <span>09 · Календарь</span>
+  </div>
+</section>
+
+<!-- ==================== PAGE 12 · IMPLICATIONS ==================== -->
+<section class="page">
+  <div class="page__mark">10 · Практика</div>
+  <div class="page__num">12 / 13</div>
+
+  <div style="margin-top:14mm">
+    <div class="kicker">Практические выводы</div>
+    <h2 class="h-sec">Что это значит<br>для <em>вашего бизнеса</em></h2>
+
+    <div class="callout" style="margin-top:0;border-left-color:var(--indigo)">
+      <div class="callout__title">Если вы используете ИИ-сервисы</div>
+      <p>Уточните у вендоров, под какой статус попадает модель — суверенная, национальная или без статуса. С 1 марта 2027 года часть сервисов может потребовать перехода на модели с российским статусом в отдельных отраслях. Проверьте, обрабатываются ли данные в ЦОД на территории РФ.</p>
+    </div>
+
+    <div class="callout" style="border-left-color:var(--emerald)">
+      <div class="callout__title">Если вы разрабатываете ИИ</div>
+      <p>Проверьте, попадает ли ваша модель под порог 1 млрд параметров. Если да — вы разработчик большой фундаментальной модели со всеми правами и обязанностями по статьям 7–8. Изучите требования к суверенному и национальному статусу и оцените, стоит ли получать его для доступа к мерам господдержки.</p>
+    </div>
+
+    <div class="callout" style="border-left-color:var(--amber)">
+      <div class="callout__title">Если вы публикуете ИИ-контент</div>
+      <p>С 1 марта 2027 года у вас будет возможность (а у крупных платформ — обязанность обеспечить такую возможность) ставить информационное предупреждение о применении ИИ к аудио- и видеоматериалам. Продумайте, как это встроить в ваши пайплайны создания и публикации контента.</p>
+    </div>
+
+    <div class="callout" style="border-left-color:var(--crimson)">
+      <div class="callout__title">Если вы обучаете модели на чужих данных</div>
+      <p>Статья 10 даёт исключение из авторских прав при обучении суверенных и национальных моделей — при условии правомерно полученных экземпляров или общедоступности объектов. Это не carte blanche: у вас должен быть легальный источник данных, а сама модель должна иметь соответствующий статус.</p>
+    </div>
+
+    <div class="kicker" style="margin-top:16px">Что делать прямо сейчас</div>
+    <ol class="list-num">
+      <li><strong>Провести аудит.</strong> Какие модели вы используете, где хранятся данные, кто вендор.</li>
+      <li><strong>Оценить порог.</strong> Используете ли вы или разрабатываете ли модель крупнее 1 млрд параметров.</li>
+      <li><strong>Спланировать переход.</strong> Если в вашей отрасли будут введены ограничения — подготовиться заранее.</li>
+      <li><strong>Настроить маркировку.</strong> Продумать, как вы будете информировать о применении ИИ в контенте.</li>
+      <li><strong>Следить за подзаконными актами.</strong> Правительство и Минцифры будут выпускать детализирующие документы.</li>
+    </ol>
+  </div>
+
+  <div class="page__footer">
+    <span>ФЗ-243 · Разбор</span>
+    <span>10 · Практика</span>
+  </div>
+</section>
+
+<!-- ==================== PAGE 13 · CONCLUSION ==================== -->
+<section class="page">
+  <div class="page__mark">11 · Итоги</div>
+  <div class="page__num">13 / 13</div>
+
+  <div style="margin-top:14mm;display:flex;flex-direction:column;flex:1">
+    <div class="kicker">Итоги разбора</div>
+    <h2 class="h-sec">Закон, который<br>задаёт <em>рамку игры</em></h2>
+    <p class="lede">
+      ФЗ № 243-ФЗ — не про запреты, а про создание условий.
+      Он вводит понятную систему координат для разработчиков ИИ,
+      бизнеса и государства. Ключевое — успеть адаптироваться.
+    </p>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="stat__num">13</div>
+        <div class="stat__label">статей регулируют всю сферу больших фундаментальных моделей ИИ</div>
+        <div class="stat__src">ФЗ № 243-ФЗ</div>
+      </div>
+      <div class="stat">
+        <div class="stat__num">1<sup>сен</sup></div>
+        <div class="stat__label">основная часть вступает в силу 1 сентября 2026</div>
+        <div class="stat__src">Статья 13</div>
+      </div>
+      <div class="stat">
+        <div class="stat__num">2</div>
+        <div class="stat__label">статуса моделей — суверенная и национальная</div>
+        <div class="stat__src">Статья 6</div>
+      </div>
+      <div class="stat">
+        <div class="stat__num">500<sup>к</sup></div>
+        <div class="stat__label">пользователей в сутки — порог для обязательной маркировки на платформах</div>
+        <div class="stat__src">Статья 9</div>
+      </div>
+    </div>
+
+    <div class="callout" style="border-left-color:var(--indigo);background:linear-gradient(180deg,rgba(30,58,138,.05),transparent)">
+      <div class="callout__title" style="font-size:14px">Главный вывод</div>
+      <p>Закон формирует три ключевые вещи: (1) понятийную рамку — что такое ИИ и большая фундаментальная модель; (2) систему поддержки — суверенные и национальные модели как инструмент технологической независимости; (3) правила поведения — маркировка, ИС, обязанности разработчиков. Бизнесу важно не пропустить сроки вступления в силу и оценить свои модели и данные на соответствие.</p>
+    </div>
+
+    <blockquote class="quote" style="margin-top:14px">
+      Искусственный интеллект — это инструмент. Очень мощный, быстро
+      развивающийся. Но в центре всего по-прежнему остаётся человек:
+      его решения, его ценности, его готовность меняться.
+      <cite>Из книги «Записки директора по искусственному интеллекту»</cite>
+    </blockquote>
+
+    <div class="expert">
+      <div class="expert__photo">
+        <img src="C9FFD587-B19C-4F19-BC04-3869F3C6DBF0.jpeg" alt="Алексей Прохоров">
+      </div>
+      <div>
+        <div class="expert__name">Алексей Прохоров</div>
+        <div class="expert__role">Директор по развитию технологий искусственного интеллекта. Эксперт по цифровой трансформации в госорганах и компаниях. Автор книги «Записки директора по искусственному интеллекту».</div>
+        <div class="expert__links">
+          <a href="https://max.ru/alproailife" target="_blank" rel="noopener">Подписаться → MAX-канал</a>
+          <a href="mailto:director.brands@yandex.ru?subject=Заказ книги">Заказать книгу</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="cta">
+      <h3>Разобрались в законе — пора действовать</h3>
+      <p>Если хотите глубже — в книге «Записки директора по искусственному интеллекту» собраны практические инструменты, кейсы и инсайты, которых не найти в учебниках. А в MAX-канале — свежие разборы регуляторных изменений и практика внедрения ИИ.</p>
+      <div class="cta__meta">
+        <span>13 страниц</span>
+        <span>2026</span>
+        <span>ФЗ-243 · Разбор</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="page__footer">
+    <span>ФЗ-243 · Разбор</span>
+    <span>11 · Итоги</span>
+  </div>
+</section>
+
+</main>
+
+<script>
+async function downloadPDF(){
+  const btn = document.getElementById('downloadBtn');
+  const label = document.getElementById('downloadText');
+  const original = label.textContent;
+
+  if (typeof html2canvas === 'undefined' || typeof window.jspdf === 'undefined') {
+    alert('Библиотека ещё загружается. Подождите пару секунд и попробуйте снова.');
+    return;
+  }
+
+  btn.disabled = true;
+  label.textContent = 'Готовим PDF…';
+
+  try {
+    const { jsPDF } = window.jspdf;
+    const A4_W = 210, A4_H = 297;
+    const pages = document.querySelectorAll('.page');
+    let pdf = null;
+
+    for (let i = 0; i < pages.length; i++) {
+      const pageEl = pages[i];
+
+      const pageRect = pageEl.getBoundingClientRect();
+      const links = [];
+      pageEl.querySelectorAll('a[href]').forEach(a => {
+        const r = a.getBoundingClientRect();
+        links.push({
+          href: a.href,
+          x: r.left - pageRect.left,
+          y: r.top - pageRect.top,
+          w: r.width,
+          h: r.height
+        });
+      });
+
+      const canvas = await html2canvas(pageEl, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: '#FBFCFE',
+        width: pageEl.offsetWidth,
+        height: pageEl.offsetHeight,
+        windowWidth: pageEl.offsetWidth,
+        windowHeight: pageEl.offsetHeight
+      });
+
+      const imgData = canvas.toDataURL('image/jpeg', 0.95);
+
+      if (i === 0) {
+        pdf = new jsPDF({ unit:'mm', format:[A4_W, A4_H], orientation:'portrait', compress:true });
+      } else {
+        pdf.addPage([A4_W, A4_H], 'portrait');
+      }
+
+      const imgRatio = canvas.width / canvas.height;
+      const pageRatio = A4_W / A4_H;
+      let imgW, imgH, offsetX, offsetY;
+
+      if (imgRatio > pageRatio) {
+        imgW = A4_W;
+        imgH = A4_W / imgRatio;
+        offsetX = 0;
+        offsetY = (A4_H - imgH) / 2;
+      } else {
+        imgH = A4_H;
+        imgW = A4_H * imgRatio;
+        offsetX = (A4_W - imgW) / 2;
+        offsetY = 0;
+      }
+
+      pdf.addImage(imgData, 'JPEG', offsetX, offsetY, imgW, imgH, undefined, 'FAST');
+
+      const pxToMmX = imgW / pageEl.offsetWidth;
+      const pxToMmY = imgH / pageEl.offsetHeight;
+
+      links.forEach(l => {
+        pdf.link(
+          offsetX + l.x * pxToMmX,
+          offsetY + l.y * pxToMmY,
+          l.w * pxToMmX,
+          l.h * pxToMmY,
+          { url: l.href }
+        );
+      });
+    }
+
+    pdf.save('fz-243-razbor.pdf');
+    label.textContent = 'Готово!';
+    setTimeout(() => { label.textContent = original; }, 1800);
+  } catch (err) {
+    console.error(err);
+    alert('Ошибка при создании PDF: ' + err.message);
+    label.textContent = original;
+  } finally {
+    btn.disabled = false;
+  }
+}
+</script>
+
+<script>
+/* Автоматически вписывает содержимое каждой страницы в A4.
+   Обложка (.cover) исключена, потому что у неё своя flex-структура. */
+(function fitPages(){
+  document.querySelectorAll('.page:not(.cover)').forEach(function(page){
+    let wrap = page.querySelector(':scope > .fit-wrap');
+    if (!wrap) {
+      wrap = document.createElement('div');
+      wrap.className = 'fit-wrap';
+      Array.from(page.children).forEach(function(ch){
+        if (!ch.classList.contains('page__mark') &&
+            !ch.classList.contains('page__num')  &&
+            !ch.classList.contains('page__footer')) {
+          wrap.appendChild(ch);
+        }
+      });
+      page.appendChild(wrap);
+    }
+
+    wrap.style.transform = '';
+    wrap.style.width = '';
+    const cs = getComputedStyle(page);
+    const avail = page.clientHeight
+                - parseFloat(cs.paddingTop)
+                - parseFloat(cs.paddingBottom)
+                - 20;
+    const real = wrap.scrollHeight;
+
+    if (real > avail) {
+      const k = avail / real;
+      wrap.style.transformOrigin = 'top left';
+      wrap.style.transform = 'scale(' + k + ')';
+      wrap.style.width = (100 / k) + '%';
+    }
+  });
+})();
+
+window.addEventListener('load', fitPages);
+window.addEventListener('resize', fitPages);
+window.addEventListener('beforeprint', fitPages);
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+</body>
+</html>
